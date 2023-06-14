@@ -1,0 +1,39 @@
+---
+title: "Telco EDA"
+format: html
+---
+
+```{r}
+library(targets)
+library(rsample)
+library(magrittr)
+library(dplyr)
+library(GGally)
+```
+
+## Sumário
+
+```{r}
+telco_initial_split <- tar_read(telco_initial_split)
+telco_train <- training(telco_initial_split)
+skimr::skim(telco_train)
+```
+```{r}
+visdat::vis_miss(telco_train)
+```
+
+```{r}
+telco_train %>% 
+  select(where(is.numeric)) %>% 
+  cor(use = "p") %>% 
+  corrplot::corrplot()
+```
+
+```{r}
+#| fig.height: 8
+#| message: FALSE
+#| warning: FALSE
+telco_train %>% 
+  select(where(is.numeric), Churn) %>%
+  ggpairs(aes(colour = Churn))
+```
